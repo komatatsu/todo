@@ -14,13 +14,13 @@ class MainActivity : AppCompatActivity() {
         private const val REQ_ADD = 1
     }
 
-    lateinit var adapter: ToDoAdapter2
+    lateinit var adapter: ToDoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        this.adapter = ToDoAdapter2(this)
+        this.adapter = ToDoAdapter(this)
         val list: RecyclerView = findViewById(R.id.list)
         list.adapter = adapter
         list.layoutManager = LinearLayoutManager(this)
