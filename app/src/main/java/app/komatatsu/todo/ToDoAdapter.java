@@ -56,11 +56,12 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoHolder> {
         return TodoRepository.loadItems(context);
     }
 
-    class ToDoHolder extends RecyclerView.ViewHolder {
+    class ToDoHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
         private Context context;
         private TextView title;
         private CheckBox check;
         private ImageView delete;
+        private ToDo toDo;
 
         ToDoHolder(View itemView) {
             super(itemView);
@@ -68,26 +69,30 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoHolder> {
             title = itemView.findViewById(R.id.title);
             check = itemView.findViewById(R.id.check);
             delete = itemView.findViewById(R.id.delete);
-        }
-
-        void onBind(final ToDo toDo) {
-            title.setText(toDo.getTitle());
-            check.setChecked(toDo.getCheck());
-            check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (toDo.getCheck() != isChecked) {
-                        toDo.setCheck(isChecked);
-                        TodoRepository.updateItem(context, toDo);
-                    }
-                }
-            });
+            check.setOnCheckedChangeListener(this);
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removeItem(toDo);
+                    if (toDo != null) {
+                        removeItem(toDo);
+                    }
                 }
             });
+        }
+
+        void onBind(final ToDo toDo) {
+            this.toDo = toDo;
+            this.title.setText(toDo.getTitle());
+            this.check.setChecked(toDo.getCheck());
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (toDo != null && toDo.getCheck() != isChecked) {
+                toDo.setCheck(isChecked);
+                TodoRepository.updateItem(context, toDo);
+                notifyDataSetChanged();
+            }
         }
     }
 }

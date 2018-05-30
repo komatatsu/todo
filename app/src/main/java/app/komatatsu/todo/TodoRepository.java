@@ -3,7 +3,6 @@ package app.komatatsu.todo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -11,14 +10,14 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 
 public class TodoRepository {
+
     private static final String DB_NAME = "todo";
     private static final String KEY = "data";
 
     static ArrayList<ToDo> loadItems(Context context) {
         SharedPreferences pref = context.getSharedPreferences(DB_NAME, Context.MODE_PRIVATE);
         String data = pref.getString(KEY, "");
-        Log.w("debug!load", data);
-        if (TextUtils.isEmpty(data) || data.equals("[]")) {
+        if (TextUtils.isEmpty(data) || "[]".equals(data)) {
             return new ArrayList<>();
         } else {
             return new Gson().fromJson(data, new TypeToken<ArrayList<ToDo>>() {
